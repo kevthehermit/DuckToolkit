@@ -1,3 +1,5 @@
+import os
+
 encoder_command_keys = [
     "DELAY",
     "SPACE",
@@ -120,3 +122,11 @@ decoder_command_keys = [
     "STOP",
     "POWER"
     ]
+
+def list_languages():
+    languages = []
+    lang_dir = os.path.join(os.path.dirname(__file__), 'languages')
+    for filename in os.listdir(lang_dir):
+        if filename.endswith('.json'):
+            languages.append(filename)
+    return languages

@@ -1,22 +1,14 @@
 #!/usr/bin/env python
-import os
 import sys
 from optparse import OptionParser
 
-import encoder
-import decoder
+from ducktoolkit import encoder, decoder
+from ducktoolkit.common import list_languages
 
 __description__ = 'Ducky Tools'
 __author__ = 'Kevin Breen, James Hall, https://ducktoolkit.com'
-__version__ = '0.1'
+__version__ = '0.2'
 __date__ = '25/08/2016'
-
-
-def list_languages():
-    languages = []
-    for filename in os.listdir('languages'):
-        languages.append(filename)
-    return languages
 
 
 if __name__ == "__main__":
@@ -41,12 +33,16 @@ if __name__ == "__main__":
 
     if not language:
         print "[!] You need to specify a supported language"
+        parser.print_help()
+        sys.exit()
 
     if "{0}.json".format(language) not in list_languages():
         print "[!] Language {0} is not supported at this time.".format(language)
         print "[+] Supported Languages"
         for lang in list_languages():
             print "  [-] {0}".format(lang.split('.')[0])
+        parser.print_help()
+        sys.exit()
 
 
     if options.encode:

@@ -5,7 +5,8 @@ from common import decoder_command_keys
 
 
 def decode_script(duck_lang, ducky_bin):
-    language_dict = os.path.join('languages', '{0}.json'.format(duck_lang))
+    lang_dir = os.path.join(os.path.dirname(__file__), 'languages')
+    language_dict = os.path.join(lang_dir, '{0}.json'.format(duck_lang))
     lang_file = json.load(open(language_dict))
     ducky_hex = ducky_bin.encode('hex')
     decoded_bin = ""
