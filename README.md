@@ -8,6 +8,13 @@ The duck tools are available in the browser at https://ducktoolkit.com. From her
 
 ## Installation
 
+Download the release and install with ```python setup.py install```
+
+Or 
+
+```sudo pip install --upgrade ducktoolkit```
+
+
 There are no external dependencies other than python.
 This has been tested on Ubuntu and Windows 10
 
@@ -20,20 +27,20 @@ The DuckToolkit is provided with a script that will allow you to easily encode a
 
 To encode point the script at your duckcode.txt file, select an output and a language as show in the example below:
 
-```python ducktools.py -e -l gb /path/to/duck_text.txt /path/to/output.bin```
+```ducktools.py -e -l gb /path/to/duck_text.txt /path/to/output.bin```
 
 ### Decode
 
 To decode point the script at your inject.bin file, select an output and a language as show in the example below:
 
-```python ducktools.py -d -l gb /path/to/inject.bin /path/to/output.txt```
+```ducktools.py -d -l gb /path/to/inject.bin /path/to/output.txt```
 
 ### Library
 
 The toolkit can also be imported as a library. 
 
 ```
-import encoder
+from ducktoolkit import encoder
 
 duck_text = 'STRING Hello'
 language = 'gb'
