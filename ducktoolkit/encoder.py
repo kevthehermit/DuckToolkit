@@ -6,14 +6,58 @@ import json
 from common import encoder_command_keys
 
 
+special_chars = ['@',
+                 '\\',
+                 '#',
+                 '~',
+                 '$',
+                 '|',
+                 '+',
+                 '-',
+                 '!',
+                 '^',
+                 '&',
+                 '*',
+                 '{',
+                 '}',
+                 '[',
+                 ']',
+                 '(',
+                 ')',
+                 '=',
+                 ',',
+                 '%',
+                 '?',
+                 '_',
+                 ';',
+                 ':',
+                 '<',
+                 '>',
+                 '.',
+                 '/',
+                 '"',
+                 '`',
+                 '\'',
+                 '1',
+                 '2',
+                 '3',
+                 '4',
+                 '5',
+                 '6',
+                 '7',
+                 '8',
+                 '9',
+                 '0']
+
+
 def parse_text(duck_text, lang_file):
     line_count = 0
     encoded_file = []
     duck_text = duck_text.replace("\r", "")
     cmd = instruction = False
 
-    for line in duck_text.split('\n'):
 
+    for line in duck_text.split('\n'):
         if len(line) > 0:
             # REM Comments
             if line.startswith('REM') or line.startswith('rem'):
@@ -53,7 +97,15 @@ def parse_text(duck_text, lang_file):
 
                 if cmd == 'STRING':
                     for char in instruction:
-                        if char.islower():
+
+                        if char in special_chars:
+                            if len(lang_file[char]) <= 2:
+                                encoded_file.append(lang_file[char])
+                                encoded_file.append('00')
+                            else:
+                                encoded_file.append(lang_file[char])
+                        elif not char.isupper():
+
                             encoded_file.append(lang_file[char])
                             encoded_file.append('00')
                         else:
@@ -101,7 +153,7 @@ def encode_script(duck_text, duck_lang):
     try:
         encoded_file = parse_text(duck_text, lang_file)
     except Exception as e:
-        # print "Error parsing duck_text: {0}".format(e)
+        print "Error parsing duck_text: {0}".format(e)
         return False
 
     if encoded_file:
