@@ -1,5 +1,14 @@
 # Change Log
 
+## [0.5](https://github.com/kevthehermit/DuckToolkit/tree/0.2) (2016-08-30)
+- Add . to Danish language file
+
+## [0.4](https://github.com/kevthehermit/DuckToolkit/tree/0.2) (2016-08-30)
+- Add additional languages
+
+## [0.3](https://github.com/kevthehermit/DuckToolkit/tree/0.2) (2016-08-30)
+- Add additional languages
+
 ## [0.2](https://github.com/kevthehermit/DuckToolkit/tree/0.2) (2016-08-30)
 - Add pip installation
 
