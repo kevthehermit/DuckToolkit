@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.7](https://github.com/kevthehermit/DuckToolkit/tree/0.2) (2016-09-05)
+- Added CH language support.
+
 ## [0.6](https://github.com/kevthehermit/DuckToolkit/tree/0.2) (2016-09-05)
 - Added " " to DK, ES & IT language files.
 
