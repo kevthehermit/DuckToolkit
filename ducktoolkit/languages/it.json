@@ -70,6 +70,7 @@
    "ALT-SHIFT": "06",
    "ALT-TAB": "71",
    "SPACE": "2c",
+   " ": "2c",
    "ESC": "29",
    "ESCAPE": "29",
    "DELAY": "00ff00ff00ff",
