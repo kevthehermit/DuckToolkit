@@ -122,9 +122,8 @@ def parse_text(duck_text, lang_file):
                             encoded_file.append('00FF')
                             delay -= 255
                         else:
-                            _delay = hex(delay)
-                            encoded_file.append('00{0}'.format(str(_delay)[2:]))
-                            # encoded_file.append(hex(delay))
+                            _delay = hex(delay)[2:].zfill(2)
+                            encoded_file.append('00{0}'.format(str(_delay)))
                             delay = 0
 
                 elif cmd in lang_file.iterkeys():
