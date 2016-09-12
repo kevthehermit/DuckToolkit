@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.9](https://github.com/kevthehermit/DuckToolkit/tree/0.2) (2016-11-12)
+- Correct the implementation of DEFAULT_DELAY
+
 ## [0.8](https://github.com/kevthehermit/DuckToolkit/tree/0.2) (2016-09-05)
 - Fix null padding for low delay values
 

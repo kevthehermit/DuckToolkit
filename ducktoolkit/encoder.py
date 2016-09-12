@@ -56,9 +56,11 @@ def parse_text(duck_text, lang_file):
     duck_text = duck_text.replace("\r", "")
     cmd = instruction = False
 
+    default_delay = 0
 
     for line in duck_text.split('\n'):
         if len(line) > 0:
+
             # REM Comments
             if line.startswith('REM') or line.startswith('rem'):
                 continue
@@ -81,6 +83,15 @@ def parse_text(duck_text, lang_file):
                 cmd = parsed_line[0].strip()
                 instruction = False
 
+            # Default Delay
+            if cmd in ['DEFAULT_DELAY', 'DEFAULTDELAY']:
+                try:
+                    default_delay = int(instruction)
+                    continue
+                except Exception as e:
+                    error_line = e
+                    return error_line
+
             # Repeat
             repeat_count = 1
             if cmd in ['REPEAT', 'repeat']:
@@ -94,7 +105,6 @@ def parse_text(duck_text, lang_file):
                 instruction = last_instruction
 
             for i in range(repeat_count):
-
                 if cmd == 'STRING':
                     for char in instruction:
 
@@ -112,8 +122,11 @@ def parse_text(duck_text, lang_file):
                             encoded_file.append(lang_file[char])
 
                 elif cmd == 'DELAY':
-                    delay = int(instruction)
+                    delay = add_delay(int(instruction))
 
+                    encoded_file.append(delay)
+
+                    '''
                     # divide by 255 add that many 0xff
                     # convert the reminder to hex
                     # e.g. 750 = FF FF F0
@@ -125,6 +138,7 @@ def parse_text(duck_text, lang_file):
                             _delay = hex(delay)[2:].zfill(2)
                             encoded_file.append('00{0}'.format(str(_delay)))
                             delay = 0
+                    '''
 
                 elif cmd in lang_file.iterkeys():
                     if not instruction:
@@ -140,7 +154,30 @@ def parse_text(duck_text, lang_file):
                 else:
                     err_line = "Command {0} Not in Language File".format(cmd)
                     return err_line
+
+                # Add Default Delay
+                if default_delay:
+                    encoded_file.append(add_delay(int(default_delay)))
+
     return encoded_file
+
+
+def add_delay(delay_value):
+
+    delay_return = ''
+
+    # divide by 255 add that many 0xff
+    # convert the reminder to hex
+    # e.g. 750 = FF FF F0
+    while delay_value > 0:
+        if delay_value > 255:
+            delay_return += '00FF'
+            delay_value -= 255
+        else:
+            _delay = hex(delay_value)[2:].zfill(2)
+            delay_return += '00{0}'.format(str(_delay))
+            delay_value = 0
+    return delay_return
 
 
 def encode_script(duck_text, duck_lang):
