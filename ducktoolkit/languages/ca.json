@@ -74,8 +74,6 @@
    "ESC": "29",
    "ESCAPE": "29",
    "DELAY": "00ff00ff00ff",
-   "DEFAULT_DELAY": "00ff00ff00ff",
-   "DEFAULTDELAY": "00ff00ff00ff",
    "PRINTSCREEN": "46",
    "INSERT": "49",
    "HOME": "4a",
