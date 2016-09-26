@@ -94,7 +94,7 @@ def parse_text(duck_text, lang_file):
 
             # Repeat
             repeat_count = 1
-            if cmd in ['REPEAT', 'repeat']:
+            if cmd in ['REPEAT', 'repeat', 'REPLAY', 'replay']:
                 try:
                     repeat_count = int(instruction)
                 except Exception as e:
