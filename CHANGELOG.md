@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.9.2](https://github.com/kevthehermit/DuckToolkit/tree/0.2) (2016-09-26)
+ - Fixed language issues
+
 ## [0.9.1](https://github.com/kevthehermit/DuckToolkit/tree/0.2) (2016-09-26)
  - Added Swedish language
  - Added PAUSE & BREAK

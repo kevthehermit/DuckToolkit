@@ -70,11 +70,10 @@
    "ALT-SHIFT": "06",
    "ALT-TAB": "71",
    "SPACE": "2c",
+   " ": "2c",
    "ESC": "29",
    "ESCAPE": "29",
    "DELAY": "00ff00ff00ff",
-   "DEFAULT_DELAY": "00ff00ff00ff",
-   "DEFAULTDELAY": "00ff00ff00ff",
    "PRINTSCREEN": "46",
    "INSERT": "49",
    "HOME": "4a",
@@ -144,7 +143,7 @@
    "/": "2402",
    "\"": "1f02",
    "'": "31",
-   "|": "6404",
+   "|": "6440",
    "<": "6400",
    ">": "6402"
 }
