@@ -3,6 +3,7 @@
 ## [1.0.0](https://github.com/kevthehermit/DuckToolkit/tree/1.0.0) (2017-02-28)
  - New language format
  - Support for bashbunny (hak5)
+ - Library wrapper for use on bashbunny
 
 ## [0.9.2](https://github.com/kevthehermit/DuckToolkit/tree/0.2) (2016-09-26)
  - Fixed language issues
