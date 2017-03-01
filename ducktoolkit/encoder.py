@@ -3,54 +3,22 @@
 import os
 import cStringIO
 import json
-from common import encoder_command_keys
+import time
+from common import convert_hex
+
+DEBUG = False
+
+def hidg_write(elements):
+    values = bytearray(elements)
+    not_hold = bytearray([0, 0, 0, 0, 0, 0, 0, 0])
+
+    hidg = open("/dev/hidg0", "wb")
+    hidg.write(values)
+    hidg.write(not_hold)
+    hidg.close()
 
 
-special_chars = ['@',
-                 '\\',
-                 '#',
-                 '~',
-                 '$',
-                 '|',
-                 '+',
-                 '-',
-                 '!',
-                 '^',
-                 '&',
-                 '*',
-                 '{',
-                 '}',
-                 '[',
-                 ']',
-                 '(',
-                 ')',
-                 '=',
-                 ',',
-                 '%',
-                 '?',
-                 '_',
-                 ';',
-                 ':',
-                 '<',
-                 '>',
-                 '.',
-                 '/',
-                 '"',
-                 '`',
-                 '\'',
-                 '1',
-                 '2',
-                 '3',
-                 '4',
-                 '5',
-                 '6',
-                 '7',
-                 '8',
-                 '9',
-                 '0']
-
-
-def parse_text(duck_text, lang_file):
+def parse_text(duck_text, lang_file, bunny):
     line_count = 0
     encoded_file = []
     duck_text = duck_text.replace("\r", "")
@@ -76,12 +44,12 @@ def parse_text(duck_text, lang_file):
             if len(parsed_line) >= 2:
                 cmd = parsed_line[0].strip()
                 instruction = parsed_line[1].rstrip()
-                if cmd != "STRING":
-                    if instruction not in encoder_command_keys:
-                        instruction = instruction.lower()
             else:
                 cmd = parsed_line[0].strip()
                 instruction = False
+
+            if DEBUG:
+                print "CMD: ", cmd, "Instruction: ", instruction
 
             # Default Delay
             if cmd in ['DEFAULT_DELAY', 'DEFAULTDELAY']:
@@ -94,7 +62,7 @@ def parse_text(duck_text, lang_file):
 
             # Repeat
             repeat_count = 1
-            if cmd in ['REPEAT', 'repeat', 'REPLAY', 'replay']:
+            if cmd.lower() in ['repeat', 'replay']:
                 try:
                     repeat_count = int(instruction)
                 except Exception as e:
@@ -108,56 +76,60 @@ def parse_text(duck_text, lang_file):
                 if cmd == 'STRING':
                     for char in instruction:
 
-                        if char in special_chars:
-                            if len(lang_file[char]) <= 2:
-                                encoded_file.append(lang_file[char])
-                                encoded_file.append('00')
-                            else:
-                                encoded_file.append(lang_file[char])
-                        elif not char.isupper():
-
-                            encoded_file.append(lang_file[char])
-                            encoded_file.append('00')
+                        elements = lang_file[char].split(',')
+                        elements = [int(i, 16) for i in elements]
+                        # Bunny Support
+                        if bunny:
+                            for i in range(5):
+                                elements.append(0)
+                            hidg_write(elements)
                         else:
-                            encoded_file.append(lang_file[char])
+                            encoded_file.append(convert_hex(elements[2]))
+                            encoded_file.append(convert_hex(elements[0]))
+                        if DEBUG:
+                            print char, ': ', convert_hex(elements[2]), convert_hex(elements[0])
 
                 elif cmd == 'DELAY':
-                    delay = add_delay(int(instruction))
-
-                    encoded_file.append(delay)
-
-                    '''
-                    # divide by 255 add that many 0xff
-                    # convert the reminder to hex
-                    # e.g. 750 = FF FF F0
-                    while delay > 0:
-                        if delay > 255:
-                            encoded_file.append('00FF')
-                            delay -= 255
-                        else:
-                            _delay = hex(delay)[2:].zfill(2)
-                            encoded_file.append('00{0}'.format(str(_delay)))
-                            delay = 0
-                    '''
+                    #Bunny Support
+                    if bunny:
+                        time.sleep(0.001 * int(instruction))
+                    else:
+                        delay = add_delay(int(instruction))
+                        encoded_file.append(delay)
 
                 elif cmd in lang_file.iterkeys():
-                    if not instruction:
-                        encoded_file.append(lang_file[cmd.upper()])
-                        if len(lang_file[cmd.upper()]) == 2:
-                            encoded_file.append('00')
-                        # encoded_file.append('00')
-                    else:
-                        # print "CMD: {0}".format(cmd)
-                        encoded_file.append(lang_file[instruction])
-                        encoded_file.append(lang_file[cmd].upper())
 
+                    elements = lang_file[cmd].split(',')
+                    elements = [int(i, 16) for i in elements]
+                    # Bunny Support
+                    for i in range(5):
+                        elements.append(0)
+
+                    if instruction:
+                        param = lang_file[instruction].split(',')
+                        param = [int(i, 16) for i in param]
+                        elements[0] |= param[0]
+                        elements[2] |= param[2]
+
+                    # Bunny Support
+                    if bunny:
+                        hidg_write(elements)
+                    else:
+                        encoded_file.append(convert_hex(elements[2]))
+                        encoded_file.append(convert_hex(elements[0]))
+
+                    if DEBUG:
+                        print instruction, ': ', convert_hex(elements[2]), convert_hex(elements[0])
                 else:
                     err_line = "Command {0} Not in Language File".format(cmd)
                     return err_line
 
                 # Add Default Delay
                 if default_delay:
-                    encoded_file.append(add_delay(int(default_delay)))
+                    if bunny:
+                        time.sleep(0.001 * int(default_delay))
+                    else:
+                        encoded_file.append(add_delay(int(default_delay)))
 
     return encoded_file
 
@@ -180,31 +152,28 @@ def add_delay(delay_value):
     return delay_return
 
 
-def encode_script(duck_text, duck_lang):
+def encode_script(duck_text, duck_lang, bunny=None):
 
     lang_dir = os.path.join(os.path.dirname(__file__), 'languages')
     language_dict = os.path.join(lang_dir, '{0}.json'.format(duck_lang))
     lang_file = json.load(open(language_dict))
 
     try:
-        encoded_file = parse_text(duck_text, lang_file)
+        encoded_file = parse_text(duck_text, lang_file, bunny)
     except Exception as e:
         print "Error parsing duck_text: {0}".format(e)
         return False
 
-    if encoded_file:
+    if encoded_file and not bunny:
         if 'Not in Language' in encoded_file:
             return encoded_file
         else:
-
             try:
                 encoded_file = "".join(encoded_file)
                 duck_blob = cStringIO.StringIO()
 
                 duck_blob.write(encoded_file.decode('hex'))
 
-                '''for char in encoded_file:
-                    duck_blob.write(char.)'''
                 duck_bin = duck_blob.getvalue()
                 duck_blob.close()
                 return duck_bin

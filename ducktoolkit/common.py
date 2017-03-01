@@ -1,63 +1,5 @@
 import os
 
-encoder_command_keys = [
-    "DELAY",
-    "SPACE",
-    "CTRL",
-    "ALT",
-    "GUI",
-    "WINDOWS",
-    "ESC",
-    "ESCAPE",
-    "PRINTSCREEN",
-    "INSERT",
-    "HOME",
-    "DELETE",
-    "DEL",
-    "END",
-    "ENTER",
-    "PAGEUP",
-    "PAGEDOWN",
-    "LEFTARROW",
-    "LEFT",
-    "DOWNARROW",
-    "DOWN",
-    "RIGHTARROW",
-    "RIGHT",
-    "UPARROW",
-    "UP",
-    "SCROLLLOCK",
-    "WINDOWS",
-    "MENU",
-    "TAB",
-    "CAPSLOCK",
-    "F1",
-    "F2",
-    "F3",
-    "F4",
-    "F5",
-    "F6",
-    "F7",
-    "F8",
-    "F9",
-    "F10",
-    "F11",
-    "F12",
-    "CTRL-ALT",
-    "CTRL-SHIFT",
-    "ALT-SHIFT"
-    "CONTROL",
-    "ESCAPE"
-    "DELAY",
-    "DEFAULTDELAY",
-    "DEFAULT_DELAY",
-    "WAKE",
-    "SLEEP",
-    "APP",
-    "STOP",
-    "POWER"
-]
-
 decoder_command_keys = [
     "DELAY",
     "SPACE",
@@ -123,6 +65,7 @@ decoder_command_keys = [
     "POWER"
     ]
 
+
 def list_languages():
     languages = []
     lang_dir = os.path.join(os.path.dirname(__file__), 'languages')
@@ -130,3 +73,9 @@ def list_languages():
         if filename.endswith('.json'):
             languages.append(filename)
     return languages
+
+
+def convert_hex(int_value):
+    encoded = format(int_value, '02x')
+
+    return encoded
