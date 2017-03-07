@@ -1,5 +1,9 @@
 # Change Log
 
+## [1.0.1](https://github.com/kevthehermit/DuckToolkit/tree/1.0.1) (2017-03-07)
+ - fix it Language
+ - fix is language
+
 ## [1.0.0](https://github.com/kevthehermit/DuckToolkit/tree/1.0.0) (2017-02-28)
  - New language format
  - Support for bashbunny (hak5)
