@@ -18,6 +18,16 @@ def decode_script(duck_lang, ducky_bin):
         duck_decoded = ducky_hex[i:i+4]
 
         for key, value in lang_file.iteritems():
+
+            # Convert value from new format
+            try:
+                new_value = value.split(',')
+                if len(new_value) == 3:
+                    value = '{0}{1}'.format(new_value[2], new_value[0])
+            except:
+                continue
+
+
             # Fix for spacing in STRING statements
             if duck_decoded == "2c00":
                 decoded_key = " "
