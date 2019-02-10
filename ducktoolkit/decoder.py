@@ -1,14 +1,15 @@
 #!/usr/local/bin/python
 import os
 import json
-from common import decoder_command_keys
+import codecs
+from ducktoolkit.common import decoder_command_keys
 
 
 def decode_script(duck_lang, ducky_bin):
     lang_dir = os.path.join(os.path.dirname(__file__), 'languages')
     language_dict = os.path.join(lang_dir, '{0}.json'.format(duck_lang))
     lang_file = json.load(open(language_dict))
-    ducky_hex = ducky_bin.encode('hex')
+    ducky_hex = codecs.encode(ducky_bin, 'hex')
     decoded_bin = ""
     duck_decoded = ""
 
@@ -17,7 +18,7 @@ def decode_script(duck_lang, ducky_bin):
         last_key = duck_decoded
         duck_decoded = ducky_hex[i:i+4]
 
-        for key, value in lang_file.iteritems():
+        for key, value in iter(lang_file.items()):
 
             # Convert value from new format
             try:
