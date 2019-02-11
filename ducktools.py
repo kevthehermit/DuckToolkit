@@ -8,7 +8,7 @@ from ducktoolkit.common import list_languages
 
 __description__ = 'Ducky Tools'
 __author__ = 'Kevin Breen, James Hall, https://ducktoolkit.com'
-__version__ = '0.3'
+__version__ = '1.0.2'
 __date__ = '11/02/2019'
 
 major_version = sys.version_info[0]

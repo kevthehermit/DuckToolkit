@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='ducktoolkit',
-    version='1.0.1',
+    version='1.0.2',
     author='Kevin Breen, James Hall',
     author_email='pip@ducktoolkit.com',
     description="USB Rubber Ducky Toolkit",
