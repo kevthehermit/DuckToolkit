@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import os
 import sys
 from optparse import OptionParser
@@ -23,7 +23,7 @@ if __name__ == "__main__":
     (options, args) = parser.parse_args()
 
     if len(args) < 1:
-        print "[!] You need to select an Ducky Script"
+        print("[!] You need to select an Ducky Script")
         parser.print_help()
         sys.exit()
 
@@ -31,18 +31,18 @@ if __name__ == "__main__":
     language = options.lang_file
 
     if not language:
-        print "[!] You need to specify a supported language"
+        print("[!] You need to specify a supported language")
         parser.print_help()
-        print "[+] Supported Languages"
+        print("[+] Supported Languages")
         for lang in common.list_languages():
-            print "  [-] {0}".format(lang.split('.')[0])
+            print("  [-] {0}".format(lang.split('.')[0]))
         sys.exit()
 
     if "{0}.json".format(language) not in common.list_languages():
-        print "[!] Language {0} is not supported at this time.".format(language)
-        print "[+] Supported Languages"
+        print("[!] Language {0} is not supported at this time.".format(language))
+        print("[+] Supported Languages")
         for lang in common.list_languages():
-            print "  [-] {0}".format(lang.split('.')[0])
+            print("  [-] {0}".format(lang.split('.')[0]))
         parser.print_help()
         sys.exit()
 
@@ -51,10 +51,10 @@ if __name__ == "__main__":
         # shoudl be a filename
         try:
             duck_filename = os.path.join(base_path, input_line)
-            print "[+] Opening File: ", duck_filename
+            print("[+] Opening File: ", duck_filename)
             duck_text = open(duck_filename, 'rb').read()
         except Exception as e:
-            print "[!] Error opening ducky file {0} : {1}".format(duck_filename, e)
+            print("[!] Error opening ducky file {0} : {1}".format(duck_filename, e))
 
     else:
         # Should be valid duck language
@@ -63,5 +63,5 @@ if __name__ == "__main__":
     try:
         encoder.encode_script(duck_text, language, bunny=True)
     except Exception as e:
-        print e
+        print(e)
 
