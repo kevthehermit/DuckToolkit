@@ -1,7 +1,6 @@
 #!/usr/local/bin/python3
 # -*- coding: UTF-8 -*-
 import os
-import io
 import sys
 import json
 import time
@@ -34,6 +33,14 @@ def parse_text(duck_text, lang_file, bunny):
     cmd = instruction = False
 
     default_delay = 0
+    
+    response = {
+        "line_count": 0,
+        "encoded_file": [],
+        "valid": True,
+        "message": ""
+        
+    }
 
     for line in duck_text.split(b'\n'):
         if len(line) > 0:
@@ -46,7 +53,7 @@ def parse_text(duck_text, lang_file, bunny):
             last_command = cmd
             last_instruction = instruction
 
-            line_count += 1
+            response['line_count'] += 1
             line = line.lstrip().rstrip()
             parsed_line = line.split(b' ', 1)
 
@@ -68,8 +75,9 @@ def parse_text(duck_text, lang_file, bunny):
                     default_delay = int(instruction)
                     continue
                 except Exception as e:
-                    error_line = e
-                    return error_line
+                    response['valid'] = False
+                    response['message'] = e
+                    return response
 
             # Repeat
             repeat_count = 1
@@ -77,8 +85,9 @@ def parse_text(duck_text, lang_file, bunny):
                 try:
                     repeat_count = int(instruction)
                 except Exception as e:
-                    print(e)
-                    error_line = b'Repeat value not valid'
+                    response['valid'] = False
+                    response['message'] = "Repeat value not valid"
+                    return response
 
                 cmd = last_command
                 instruction = last_instruction
@@ -98,8 +107,8 @@ def parse_text(duck_text, lang_file, bunny):
                                 elements.append(0)
                             hidg_write(elements)
                         else:
-                            encoded_file.append(convert_hex(elements[2]))
-                            encoded_file.append(convert_hex(elements[0]))
+                            response['encoded_file'].append(convert_hex(elements[2]))
+                            response['encoded_file'].append(convert_hex(elements[0]))
                         if DEBUG:
                             print(char, ': ', convert_hex(elements[2]), convert_hex(elements[0]))
 
@@ -109,7 +118,7 @@ def parse_text(duck_text, lang_file, bunny):
                         time.sleep(0.001 * int(instruction))
                     else:
                         delay = add_delay(int(instruction))
-                        encoded_file.append(delay)
+                        response['encoded_file'].append(delay)
 
                 
 
@@ -131,24 +140,25 @@ def parse_text(duck_text, lang_file, bunny):
                     if bunny:
                         hidg_write(elements)
                     else:
-                        encoded_file.append(convert_hex(elements[2]))
-                        encoded_file.append(convert_hex(elements[0]))
+                        response['encoded_file'].append(convert_hex(elements[2]))
+                        response['encoded_file'].append(convert_hex(elements[0]))
 
                     if DEBUG:
                         print(instruction, ': ', convert_hex(elements[2]), convert_hex(elements[0]))
                 else:
-                    err_line = "Command '{0}' is not in the Language File".format(cmd)
-                    return err_line
+                    
+                    response['valid'] = False
+                    response['message'] = "{0} is not a valid command".format(cmd.decode('ascii'))
+                    return response
 
                 # Add Default Delay
                 if default_delay:
                     if bunny:
                         time.sleep(0.001 * int(default_delay))
                     else:
-                        encoded_file.append(add_delay(int(default_delay)))
+                        response['encoded_file'].append(add_delay(int(default_delay)))
 
-
-    return encoded_file
+    return response
 
 
 def add_delay(delay_value):
@@ -177,25 +187,15 @@ def encode_script(duck_text, duck_lang, bunny=None):
 
 
     try:
-        encoded_file = parse_text(duck_text, lang_file, bunny)
+        response = parse_text(duck_text, lang_file, bunny)
     except Exception as e:
-        print("Error parsing duck_text: {0}".format(e))
-        return False
+        return {
+            "line_count": 0,
+            "encoded_file": [],
+            "valid": False,
+            "message": "Error parsing duck_text: {0}".format(e)
+        }
         
 
-    if encoded_file and not bunny:
-        if b'not in the Language' in encoded_file:
-            return encoded_file
-        else:
-            try:
-                encoded_file = "".join(encoded_file)
-                duck_blob = io.BytesIO()
-                write_bytes = encoded_file.encode()
-                duck_blob.write(write_bytes)
-                duck_bin = duck_blob.getvalue()
-                duck_blob.close()
-                return duck_bin
+    return response
 
-            except Exception as e:
-                print("Error creating inject.bin: {0}".format(e))
-                return False

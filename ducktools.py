@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import io
 import sys
 import binascii
 from optparse import OptionParser
@@ -8,8 +9,8 @@ from ducktoolkit.common import list_languages
 
 __description__ = 'Ducky Tools'
 __author__ = 'Kevin Breen, James Hall, https://ducktoolkit.com'
-__version__ = '1.0.2'
-__date__ = '11/02/2019'
+__version__ = '1.0.3'
+__date__ = '16/02/2019'
 
 major_version = sys.version_info[0]
 
@@ -58,20 +59,28 @@ if __name__ == "__main__":
             sys.exit()
 
         print("  [-] Encoding File")
-        duck_bin = encoder.encode_script(duck_text, language)
+        encoder_response = encoder.encode_script(duck_text, language)
+        
+        if not encoder_response['valid']:
+            print("[!] Error on line {0}: {1}".format(encoder_response['line_count'], encoder_response['message']))
+            sys.exit(0)
 
-        #print(duck_bin, "<=-----------")
-
-        if not duck_bin or b'not in the Language' in duck_bin:
-            if duck_bin:
-                print("[!] {0} Is not supported as a valid command".format(duck_bin))
-            else:
-                print("[!] Something went wrong")
-            sys.exit()
-            
         print("  [-] Encoding complete")
 
         print("  [-] Writing inject.bin to {0}".format(output_file))
+        
+        try:
+            encoded_file = "".join(encoder_response['encoded_file'])
+            duck_blob = io.BytesIO()
+            write_bytes = encoded_file.encode()
+            duck_blob.write(write_bytes)
+            duck_bin = duck_blob.getvalue()
+            duck_blob.close()
+
+        except Exception as e:
+            print("Error creating inject.bin: {0}".format(e))
+            sys.exit()
+        
         with open(output_file, 'wb') as out:
             out.write(binascii.unhexlify(duck_bin))
         print("[+] Process Complete")

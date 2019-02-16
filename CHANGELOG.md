@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.0.3]
+## [1.0.2](https://github.com/kevthehermit/DuckToolkit/tree/1.0.2) (2019-02-16)
+ - Python 3 support
+ - Change the internal workflow for better error handling.
+
+## [1.0.2](https://github.com/kevthehermit/DuckToolkit/tree/1.0.2) (2019-02-11)
+ - Python 3 support
+
 ## [1.0.1](https://github.com/kevthehermit/DuckToolkit/tree/1.0.1) (2017-03-07)
  - fix it Language
  - fix is language
