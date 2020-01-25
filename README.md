@@ -37,7 +37,7 @@ To decode point the script at your inject.bin file, select an output and a langu
 
 ### Library
 
-The toolkit can also be imported as a library. 
+The toolkit is python 3 compatible and can also be imported as a library. 
 
 ```
 from ducktoolkit import encoder
