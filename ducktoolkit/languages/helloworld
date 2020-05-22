@@ -1,0 +1,8 @@
+REM Open cmd
+GUI r
+DELAY 500
+STRING cmd
+DELAY 300
+ENTER
+DELAY 500
+STRING Hello World!
