@@ -183,7 +183,7 @@ def encode_script(duck_text, duck_lang, bunny=None):
 
     lang_dir = os.path.join(os.path.dirname(__file__), 'languages')
     language_dict = os.path.join(lang_dir, '{0}.json'.format(duck_lang))
-    lang_file = json.load(open(language_dict))
+    lang_file = json.load(open(language_dict, encoding="utf8))
 
 
     try:
