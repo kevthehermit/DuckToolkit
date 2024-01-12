@@ -121,6 +121,23 @@ def parse_text(duck_text, lang_file, bunny):
                         response['encoded_file'].append(delay)
 
                 
+                elif cmd ==  b'ATTACKMODE' :
+                    if instruction == b"STORAGE" :
+                        print("ATTACK MODE: STORAGE")
+                        response['encoded_file'].append(convert_hex(0xF2F2))
+
+
+                    elif instruction == b"HIDSTORAGE" :
+                        print("ATTACK MODE: HIDSTORAGE")
+                        response['encoded_file'].append(convert_hex(0xF3F3))
+
+                    elif instruction == b"HID" :
+                        print("ATTACK MODE: HID")
+                        response['encoded_file'].append(convert_hex(0xF1F1))
+
+                    else:
+                        print("UNKNOWN ATTACK MODE {}".format(instruction))
+
 
                 elif cmd in iter(lang_file.keys()):
 

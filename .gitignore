@@ -92,3 +92,9 @@ ENV/
 
 # Test files
 testfiles/*
+
+# Payloads
+payloads/*
+payload.txt
+.DS_Store
+
